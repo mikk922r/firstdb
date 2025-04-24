@@ -1,5 +1,7 @@
 using Blazor.Components;
 using Blazor.Services;
+using Microsoft.EntityFrameworkCore;
+using Blazor.DBService;
 
 namespace Blazor
 {
@@ -13,12 +15,13 @@ namespace Blazor
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
 
-            // Registrér DBService som singleton
-            builder.Services.AddSingleton<DBService>();
-
+builder.Services.AddDbContextFactory<ApplicationDbContext>(opts =>
+    opts.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
+
+builder.Services.AddScoped<ProductService>();                                  // DI in Blazor components :contentReference[oaicite:2]{index=2}
+
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Error");
